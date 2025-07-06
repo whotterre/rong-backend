@@ -11,7 +11,7 @@ import (
 
 func SetupRoutes(app *fiber.App, client *redis.Client, logger *zap.Logger){
 
-	lbGroup := app.Group("/api/v1/leaderboard")
+	lbGroup := app.Group("/")
 	lbRepo := repositories.NewLeaderBoardRepo(client, logger)
 	lbService := services.NewLeaderboardService(lbRepo, logger)
 	lbHandler := handlers.NewLeaderboardHandler(lbService)

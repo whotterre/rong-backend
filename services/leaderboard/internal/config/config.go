@@ -7,6 +7,7 @@ type Config struct {
 	RedisPassword string `mapstructure:"REDIS_PASSWORD"`
 	RedisDB       string `mapstructure:"REDIS_DB"`
 	ServicePort   string `mapstructure:"SERVICE_PORT"`
+	ServiceName   string `mapstructure:"SERVICE_NAME"`
 }
 
 func LoadConfig() (config Config, err error) {
