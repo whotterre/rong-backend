@@ -82,13 +82,6 @@ func (l *LeaderboardHandler) GetTopNPlayers (c *fiber.Ctx) error {
 }
 
 func (l *LeaderboardHandler) GetHighestScore(c *fiber.Ctx) error {
-	userID := c.Params("userID")
-	if userID == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "User ID is required",
-		})
-	}
-
 	highestScore, err := l.lbService.GetHighestScore()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -97,7 +90,6 @@ func (l *LeaderboardHandler) GetHighestScore(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"userId": userID,
 		"highestScore": highestScore,
 	})
 }
