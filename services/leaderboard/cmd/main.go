@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	reqLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/whotterre/tiermaster/internal/config"
 	"github.com/whotterre/tiermaster/internal/conn"
@@ -37,12 +36,6 @@ func main() {
 	}
 
 	app := fiber.New()
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:8080",
-		AllowHeaders:     "Origin, Content-Type, Accept, Authorization, Content-Disposition",
-		AllowCredentials: true,
-		AllowMethods:     "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-	}))
 
 	app.Use(reqLogger.New())
 	SetupRoutes(app, client, logger)

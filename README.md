@@ -23,20 +23,36 @@ The project follows a clean, modular structure to ensure maintainability and cle
 
 tiermaster/
 .
-├── cmd
-│   └── main.go             # Entry point
-├── docker-compose.yml      # Docker configuration for running the Redis ins
-├── Dockerfile              # For building and deploying the microservice
-├── docs                    # OpenAPI spec
-├── go.mod                  # Contains metadata for 3p packages                
-├── go.sum  
-├── internal
-│   ├── config
-│   │   └── config.go       # Util for loading config from .env files with Viper
-│   ├── repositories        
-│   └── service
-└── README.md
-
+├── README.md
+└── services
+    ├── docker-compose.yml
+    ├── gateway
+    │   ├── Dockerfile
+    │   ├── go.mod
+    │   ├── go.sum
+    │   └── main.go
+    └── leaderboard
+        ├── app.env
+        ├── cmd
+        │   ├── main.go
+        │   └── setupRoutes.go
+        ├── Dockerfile
+        ├── docs
+        ├── go.mod
+        ├── go.sum
+        └── internal
+            ├── config
+            │   └── config.go
+            ├── conn
+            │   └── conn.go
+            ├── handlers
+            │   └── lb.go
+            ├── models
+            │   └── user.go
+            ├── repositories
+            │   └── lb.go
+            └── services
+                └── lb.go
 ````
 
 # Getting Started
