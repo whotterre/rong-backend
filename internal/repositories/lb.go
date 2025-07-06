@@ -12,7 +12,7 @@ import (
 type LeaderboardRepo interface {
 	AddScore(entry models.LeaderboardEntry) error
 	GetTopScores(limit int) ([]EntryWithRank, error)
-	GetUserRank(userID string) (int64, error)
+	GetHighestScore() (int64, error)
 }
 
 type leaderBoardRepo struct {
@@ -105,7 +105,7 @@ func (r *leaderBoardRepo) GetTopScores(limit int) ([]EntryWithRank, error) {
 
 		// Add rank (1-based index)
 		entry.Rank = int64(i + 1)
-		entry.Score = res.Score // Ensure score matches ranking
+		entry.Score = res.Score
 
 		entries = append(entries, entry)
 	}
@@ -113,13 +113,16 @@ func (r *leaderBoardRepo) GetTopScores(limit int) ([]EntryWithRank, error) {
 	return entries, nil
 }
 
-func (r *leaderBoardRepo) GetUserRank(userID string) (int64, error) {
-	rank, err := r.client.ZRevRank("leaderboard:rankings", userID).Result()
+func (r *leaderBoardRepo) GetHighestScore() (int64, error) {
+	highestScore, err := r.client.ZRevRangeWithScores("leaderboard:rankings", 0, 0).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return -1, nil 
 		}
 		return 0, fmt.Errorf("failed to get user rank: %w", err)
 	}
-	return rank + 1, nil 
+	if len(highestScore) == 0 {
+		return -1, nil
+	}
+	return int64(highestScore[0].Score), nil
 }
