@@ -63,7 +63,7 @@ func (r *leaderBoardRepo) AddScore(entry models.LeaderboardEntry) error {
 
 type EntryWithRank struct {
 	models.LeaderboardEntry
-	Rank int64
+	Rank int64 `json:"rank"`
 }
 
 func (r *leaderBoardRepo) GetTopScores(limit int) ([]EntryWithRank, error) {

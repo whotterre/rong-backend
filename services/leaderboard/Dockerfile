@@ -1,27 +1,21 @@
-# Leaderboard multistage Dockerfile 
-# Stage 1: Building the binary
-FROM golang:1.22.0-alpine AS builder
+# Stage 1: Builder
+FROM golang:1.24.4-alpine AS builder
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
+
 COPY . .
-# Awesome! 
-# So the -ldflags reduces the size of the binary by
-# stripping debugging information and symbol tables.
-RUN CGO_ENABLED=0 go build -o main -ldflags "-s -w" .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd
 
-# Stage 2: Creating the final image
+# Stage 2: Runner
 FROM alpine:latest
-
-# Similar to sudo apt update && sudo apt install ca-certificates
-# On Ubuntu
-RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
 COPY --from=builder /app/main .
+COPY app.env .
 
 EXPOSE 3001
 

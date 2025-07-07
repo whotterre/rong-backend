@@ -14,11 +14,11 @@ func SetupRoutes(app *fiber.App, client *redis.Client, logger *zap.Logger){
 	lbGroup := app.Group("/")
 	lbRepo := repositories.NewLeaderBoardRepo(client, logger)
 	lbService := services.NewLeaderboardService(lbRepo, logger)
-	lbHandler := handlers.NewLeaderboardHandler(lbService)
+	lbHandler := handlers.NewLeaderboardHandler(lbService, logger)
 
 	// Leaderboard logic 
 	lbGroup.Post("/score/:userID", lbHandler.AddScore)
-	lbGroup.Get("/scores", lbHandler.GetTopNPlayers)
-	lbGroup.Get("/highest", lbHandler.GetHighestScore)
+	lbGroup.Get("/scores/", lbHandler.GetTopNPlayers)
+	lbGroup.Get("/highest/", lbHandler.GetHighestScore)
 
 }

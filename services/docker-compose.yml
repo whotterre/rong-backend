@@ -5,9 +5,8 @@ services:
   # Microservice gateway
   gateway:
     build:
-      context: .
-      dockerfile: services/gateway/Dockerfile
-    
+      context: ./gateway 
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     depends_on:
@@ -16,47 +15,48 @@ services:
       - LOG_LEVEL=info
     networks:
       - microservices-net
-    
 
-    # Leaderboard Microservice
-    leaderboard-service:
-      build:
-        context: .
-        dockerfile: services/leaderboard/Dockerfile
-      expose:
-        - "3001"
-      environment:
-        - PORT=:3001
-        - REDIS_ADDR=redis:6379
-        - SERVICE_NAME=leaderboard
-      depends_on:
-        redis:
-          condition: service_healthy
-      networks:
-       - microservices-net
-      restart: unless-stopped
+  # Leaderboard Microservice
+  leaderboard-service:
+    build:
+      context: ./leaderboard
+      dockerfile: Dockerfile
+    expose:
+      - "3001"
+    environment:
+      - PORT=:3001
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASSWORD=
+      - REDIS_DB=0
+      - SERVICE_NAME=leaderboard
+      - SERVICE_PORT=:3001
+      - DEV_ENV=production 
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: unless-stopped
 
-    # Infra
-    redis:
-      image: redis:7-alpine
-      expose: 
-        - "6379"
-      volumes:
-        - redis_data:/data
-      networks:
-        - microservices-net
-      healthcheck:
-        test: ["CMD", "redis-cli", "ping"]
-        interval: 5s
-        timeout: 3s
-        retries: 5
-      restart: unless-stopped
-  volumes:
-    redis_data:
-  networks:
-    microservices-net:
-      driver: bridge
-    
+  # Infra
+  redis:
+    image: redis:7-alpine
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
 
+volumes:
+  redis_data:
 
-    
+networks:
+  microservices-net:
+    driver: bridge

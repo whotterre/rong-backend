@@ -20,15 +20,11 @@ func main() {
 	}
 	defer logger.Sync()
 	// Load config
-	config, err := config.LoadConfig()
+	config := config.LoadConfig()
 	logger.Info("Starting leaderboard microservice",
 		zap.String("port", config.ServicePort),
 		zap.String("service", config.ServiceName),
 	)
-	if err != nil {
-		logger.Error("Failed to load config from .env file")
-		panic(err)
-	}
 	// Initialize Redis client
 	client, err := conn.GetRedisClient(config)
 	if err != nil {

@@ -1,12 +1,12 @@
 # Dockerfile for the gateway service
-# Stage 1 - Build the Go application
-FROM golang:1.22.0-alpine AS builder
+# Stage 1 - Build the Go binary
+FROM golang:1.24.4-alpine AS builder
 
 WORKDIR /app
-COPY go.mod go.sum ./
+COPY go.mod ./
 RUN go mod download
 
-COPY services/gateway/ ./
+COPY . ./
 RUN go build -o gateway main.go
 
 # Stage 2 - Create a minimal image with the built application
