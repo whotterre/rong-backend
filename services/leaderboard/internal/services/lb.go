@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// Service interface defines the business capabilities
 type LeaderboardService interface {
 	SubmitScore(entry models.LeaderboardEntry) error
 	GetTopPlayers(limit int) ([]repositories.EntryWithRank, error)
@@ -29,7 +28,7 @@ func NewLeaderboardService(repo repositories.LeaderboardRepo, logger *zap.Logger
 	}
 }
 
-// SubmitScore handles business logic before storage
+
 func (s *leaderboardService) SubmitScore(entry models.LeaderboardEntry) error {
 	// Validation
 	if entry.Score < 0 {
@@ -39,10 +38,8 @@ func (s *leaderboardService) SubmitScore(entry models.LeaderboardEntry) error {
 		return errors.New("user ID is required")
 	}
 
-	// Set timestamp
 	entry.LastUpdatedAt = time.Now().UTC()
 
-	// Business logic example: Minimum score threshold
 	const minScore = 2
 	if entry.Score < minScore {
 		s.logger.Warn("Score below threshold",
@@ -52,7 +49,6 @@ func (s *leaderboardService) SubmitScore(entry models.LeaderboardEntry) error {
 		return fmt.Errorf("score must be at least %d", minScore)
 	}
 
-	// Call repository
 	if err := s.repo.AddScore(entry); err != nil {
 		s.logger.Error("Failed to submit score",
 			zap.String("userID", entry.UserID),
