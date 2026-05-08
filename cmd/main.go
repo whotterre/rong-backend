@@ -33,6 +33,11 @@ func main() {
 
 	app := fiber.New()
 
+	app.Use(cors.New(cors.Config{
+        AllowOrigins: config.FrontendURL,
+        AllowCredentials: true,
+    }))
+	
 	app.Use(reqLogger.New())
 	SetupRoutes(app, client, logger)
 
