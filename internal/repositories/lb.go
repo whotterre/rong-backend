@@ -28,7 +28,6 @@ func NewLeaderBoardRepo(client *redis.Client, logger *zap.Logger) LeaderboardRep
 }
 
 func (r *leaderBoardRepo) AddScore(entry models.LeaderboardEntry) error {
-	// Serialize the full entry data as JSON
 	entryData, err := json.Marshal(entry)
 	if err != nil {
 		r.logger.Error("Failed to marshal leaderboard entry")
@@ -103,7 +102,6 @@ func (r *leaderBoardRepo) GetTopScores(limit int) ([]EntryWithRank, error) {
 			continue
 		}
 
-		// Add rank (1-based index)
 		entry.Rank = int64(i + 1)
 		entry.Score = res.Score
 

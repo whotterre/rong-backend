@@ -8,12 +8,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/whotterre/tiermaster/internal/models"
 	"github.com/whotterre/tiermaster/internal/services"
-	"go.uber.org/zap" // Import zap for logging
+	"go.uber.org/zap" 
 )
 
 type LeaderboardHandler struct {
 	lbService services.LeaderboardService
-	logger    *zap.Logger // Add logger to the handler
+	logger    *zap.Logger 
 }
 
 func NewLeaderboardHandler(lbService services.LeaderboardService, logger *zap.Logger) *LeaderboardHandler {
@@ -78,12 +78,10 @@ func (l *LeaderboardHandler) GetTopNPlayers(c *fiber.Ctx) error {
 		})
 	}
 
-	// --- NEW DEBUGGING LINE: Log the actual data being sent ---
 	l.logger.Debug("Sending leaderboard response",
 		zap.Int("limit", limit),
-		zap.Any("leaderboardData", leaderboard), // Log the actual data structure
+		zap.Any("leaderboardData", leaderboard), 
 	)
-	// --- END NEW DEBUGGING LINE ---
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message":     fmt.Sprintf("Top %d users", limit),
