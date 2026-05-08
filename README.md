@@ -1,6 +1,6 @@
 # TierMaster
 
-TierMaster is a leaderboard microservice project built with Go and Redis. I decided to do this to learn about Redis (and to go without using a relational database for once). Plus, microservices are really cool too :)
+TierMaster is a leaderboard service built with Go and Redis. The project has been consolidated into a single monolith service (formerly separated into a gateway + leaderboard).
 
 # Tech Stack
 * **Go:** The primary language for building the microservice, chosen for its performance, concurrency features, and strong tooling.
@@ -20,39 +20,28 @@ TierMaster is a leaderboard microservice project built with Go and Redis. I deci
 The project follows a clean, modular structure to ensure maintainability and clear separation of concerns:
 
 ```
-
 tiermaster/
-.
 ├── README.md
-└── services
-    ├── docker-compose.yml
-    ├── gateway
-    │   ├── Dockerfile
-    │   ├── go.mod
-    │   ├── go.sum
-    │   └── main.go
-    └── leaderboard
-        ├── app.env
-        ├── cmd
-        │   ├── main.go
-        │   └── setupRoutes.go
-        ├── Dockerfile
-        ├── docs
-        ├── go.mod
-        ├── go.sum
-        └── internal
-            ├── config
-            │   └── config.go
-            ├── conn
-            │   └── conn.go
-            ├── handlers
-            │   └── lb.go
-            ├── models
-            │   └── user.go
-            ├── repositories
-            │   └── lb.go
-            └── services
-                └── lb.go
+├── app.env
+├── cmd
+│   ├── main.go
+│   └── setupRoutes.go
+├── Dockerfile
+├── go.mod
+├── go.sum
+└── internal
+    ├── config
+    │   └── config.go
+    ├── conn
+    │   └── conn.go
+    ├── handlers
+    │   └── lb.go
+    ├── models
+    │   └── user.go
+    ├── repositories
+    │   └── lb.go
+    └── services
+        └── lb.go
 ````
 
 # Getting Started
@@ -61,8 +50,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* Go (version 1.20+)
-* Docker & Docker Compose (for local development with Redis)
+- Go (version 1.20+)
+- Docker & Docker Compose (for local development with Redis)
 
 ### Installation
 
@@ -73,33 +62,27 @@ These instructions will get you a copy of the project up and running on your loc
     ```
 
 2.  **Set up Environment Variables:**
-    Create a `.env` file in the root directory based on `.env.example`.
-    ```dotenv
-    # Example .env file
-    REDIS_ADDR=localhost:6379
-    REDIS_PASSWORD=
-    REDIS_DB=0
-    SERVICE_PORT=8080
-    ```
+    Copy or edit `app.env` in the repository root and adjust any values (Redis address, ports, etc.).
 
-3.  **Run with Docker Compose (Recommended for local dev):**
-    This will start both the Redis instance and the Go microservice.
+3.  **Run with Docker (Recommended for local dev):**
+    Build and run the monolith container from the repository root.
     ```bash
-    docker-compose -f docker/docker-compose.yml up --build
+    docker build -t tiermaster .
+    docker run --env-file app.env -p 3001:3001 tiermaster
     ```
-    The service should be accessible at `http://localhost:8080`.
+    The service should be accessible at `http://localhost:3001` (or the port defined in `app.env`).
 
 4.  **Run Natively (without Docker for the Go service):**
-    * **Start a Redis instance:** Ensure you have a Redis server running (e.g., `redis-server` if installed locally, or via a Docker container).
+    * **Start a Redis instance:** Ensure you have a Redis server running locally or via Docker.
     * **Build and run the Go application:**
         ```bash
-        go build -o bin/tiermaster-service ./cmd/tiermaster-service
-        ./bin/tiermaster-service
+        go build -o bin/tiermaster ./cmd
+        ./bin/tiermaster
         ```
 
 # API Endpoints
 
-Once the service is running, you can interact with it via the following HTTP endpoints. (Assuming `http://localhost:8080` as the base URL).
+Once the service is running, you can interact with it via the following HTTP endpoints. (Assuming `http://localhost:3001` as the base URL).
 
 * **Add or Update User Score**
     * `POST /scores`
@@ -150,13 +133,4 @@ Once the service is running, you can interact with it via the following HTTP end
 # Contributing
 
 Feel free to open issues or pull requests. Contributions are welcome\!
-
-# License
-
-This project is licensed under the MIT License - see the `LICENSE` file for details.
-
-# Acknowledgments
-
-  * Redis documentation and community for excellent resources.
-  * Go community for amazing libraries and support.
 
