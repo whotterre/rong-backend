@@ -11,6 +11,7 @@ type Config struct {
     ServicePort   string `mapstructure:"SERVICE_PORT"`
     ServiceName   string `mapstructure:"SERVICE_NAME"`
     DevEnv        string `mapstructure:"DEV_ENV"`
+    FrontendURL   string `mapstructure:"FRONTEND_URL"`
 }
 
 func LoadConfig() Config {
@@ -21,6 +22,7 @@ func LoadConfig() Config {
         ServicePort:   getEnv("SERVICE_PORT", ":3001"),
         ServiceName:   getEnv("SERVICE_NAME", "leaderboard"),
         DevEnv:        getEnv("DEV_ENV", "development"),
+        Frontend:      getEnv("FRONTEND_URL", ""),
     }
 }
 
