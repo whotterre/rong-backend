@@ -22,7 +22,7 @@ func LoadConfig() Config {
         ServicePort:   getEnv("SERVICE_PORT", ":3001"),
         ServiceName:   getEnv("SERVICE_NAME", "leaderboard"),
         DevEnv:        getEnv("DEV_ENV", "development"),
-        Frontend:      getEnv("FRONTEND_URL", ""),
+        FrontendURL:      getEnv("FRONTEND_URL", ""),
     }
 }
 
