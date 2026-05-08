@@ -16,13 +16,13 @@ func main() {
 	// Initialize logger
 	logger, err := zap.NewDevelopment()
 	if err != nil {
-		panic(err)
-
+		logger.Error("Failed to create new Zap logger")
+		os.Exit(1)
 	}
 	defer logger.Sync()
 	// Load config
 	config := config.LoadConfig()
-	logger.Info("Starting leaderboard microservice",
+	logger.Info("Starting leaderboard service",
 		zap.String("port", config.ServicePort),
 		zap.String("service", config.ServiceName),
 	)
@@ -36,7 +36,6 @@ func main() {
 
 	app.Use(cors.New(cors.Config{
         AllowOrigins: config.FrontendURL,
-        AllowCredentials: true,
     }))
 	
 	app.Use(reqLogger.New())
@@ -58,7 +57,5 @@ func main() {
 		port = config.ServicePort
 	}
 
-	// Pass client down to subsequent services
 	log.Fatal(app.Listen(port))
-
 }

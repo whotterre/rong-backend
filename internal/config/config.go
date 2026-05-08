@@ -16,7 +16,7 @@ type Config struct {
 
 func LoadConfig() Config {
     return Config{
-        RedisAddr:     getEnv("REDIS_ADDR", "redis-1:6379"),
+        RedisAddr:     getEnv("REDIS_ADDR", ""),
         RedisPassword: getEnv("REDIS_PASSWORD", ""),
         RedisDB:       getEnv("REDIS_DB", "0"),
         ServicePort:   getEnv("SERVICE_PORT", ":3001"),
