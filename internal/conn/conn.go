@@ -21,7 +21,7 @@ func GetRedisClient(cfg config.Config) (*redis.Client, error) {
 
 		 c := redis.NewClient(opt)
 
-		_, err = c.Ping(ctx).Result()
+		_, err = c.Ping().Result()
 	    if err != nil {
 	        return "", err
 	    }
