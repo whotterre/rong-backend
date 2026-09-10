@@ -14,16 +14,24 @@ func GetRedisClient(cfg config.Config) (*redis.Client, error) {
 	var client *redis.Client
 
 	connectEffector := func(ctx context.Context) (string, error) {
-		opt, err := redis.ParseURL(cfg.RedisAddr)
-	    if err != nil {
-	        return "", err
-	    }
-
-		opt.TLSConfig = &tls.Config{
-			InsecureSkipVerify: false,
+		parsedURL, err := url.Parse(cfg.RedisAddr)
+		if err != nil {
+			return "", err
 		}
 
-		 c := redis.NewClient(opt)
+		password := ""
+		if parsedURL.User != nil {
+			if p, ok := parsedURL.User.Password(); ok {
+				password = p
+			}
+		}
+
+		c := redis.NewClient(&redis.Options{
+			Addr:      parsedURL.Host, 
+			Password:  password,      
+			DB:        0,
+			TLSConfig: &tls.Config{InsecureSkipVerify: false}, 
+		})
 
 		_, err = c.Ping().Result()
 	    if err != nil {
