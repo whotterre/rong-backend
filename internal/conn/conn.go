@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
-
+	"crypto/tls"
 	"github.com/go-redis/redis"
 	"github.com/whotterre/tiermaster/internal/config"
 )
