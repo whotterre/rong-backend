@@ -3,6 +3,7 @@ package conn
 import (
 	"context"
 	"log"
+	"net/url"
 	"time"
 	"crypto/tls"
 	"github.com/go-redis/redis"
