@@ -14,13 +14,19 @@ func GetRedisClient(cfg config.Config) (*redis.Client, error) {
 	var client *redis.Client
 
 	connectEffector := func(ctx context.Context) (string, error) {
-		c := redis.NewClient(&redis.Options{
-			Addr:     cfg.RedisAddr,
-			Password: "",
-			DB:       0,
-		})
+		opt, err := redis.ParseURL(cfg.RedisAddr)
+	    if err != nil {
+	        return "", err
+	    }
 
-		client = c
+		 c := redis.NewClient(opt)
+
+		_, err = c.Ping(ctx).Result()
+	    if err != nil {
+	        return "", err
+	    }
+
+   		client = c
 		return "Redis connected", nil
 	}
 
