@@ -19,6 +19,10 @@ func GetRedisClient(cfg config.Config) (*redis.Client, error) {
 	        return "", err
 	    }
 
+		opt.TLSConfig = &tls.Config{
+			InsecureSkipVerify: false,
+		}
+
 		 c := redis.NewClient(opt)
 
 		_, err = c.Ping().Result()
