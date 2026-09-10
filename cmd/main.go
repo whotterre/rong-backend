@@ -50,7 +50,7 @@ func main() {
     })
 	// Dynamic port alloc
 	var port string
-	envPort := os.Getenv("PORT")
+	envPort := ":" + os.Getenv("PORT")
 	if envPort != "" {
 		port = envPort
 	} else {
